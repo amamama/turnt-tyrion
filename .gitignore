@@ -1,0 +1,9 @@
+bin/
+obj/
+
+*~
+.*.swp
+*.o
+*.d
+*.out
+core
