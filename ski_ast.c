@@ -541,7 +541,7 @@ cell_p *reduce_ast(cell_p *root) {
 
 		default :
 		//printf("atom = %s\n", atom);
-		return is_pair(car(cdr(*root)))?reduce_ast(&car(cdr(*root))):NULL;
+		return cdr(*root) && is_pair(car(cdr(*root)))?reduce_ast(&car(cdr(*root))):NULL;
 	}
 	return NULL;
 }
