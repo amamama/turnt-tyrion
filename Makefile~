@@ -1,0 +1,11 @@
+CC=gcc
+CFLAGS:= -std=c11 -pedantic -Wall -g $(CFLAGS)
+LDFLAGS:= $(LDFLAGS)
+
+all: a.out
+
+a.out: $(SRC)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(SRC) utils.c
+
+run : all
+	./a.out $(ARGS)
