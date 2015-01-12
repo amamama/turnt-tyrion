@@ -557,6 +557,7 @@ cell_p *reduce_ast(cell_p *root) {
 		if (is_pair(car(r))) {
 			ret = reduce_ast(&car(r));
 			//break;
+		} else {
 		}
 	}
 	return ret;
