@@ -8,5 +8,6 @@ all: a.out
 a.out: $(SRC)
 	$(CC) $(CFLAGS) $(LDFLAGS) $(SRC)
 
-run : all
-	./a.out $(ARGS)
+run : all test.c
+	cpp -P -lang-c test.c test.lzk
+	./a.out < test.lzk

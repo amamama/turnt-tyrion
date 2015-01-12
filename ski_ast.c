@@ -181,7 +181,7 @@ static inline int is_nil(cell_p const c) {
 cell_t *cell_heap = NULL;
 #define ast_root (car(cell_heap))
 
-#define MEMO_SIZE 0x10000
+#define MEMO_SIZE 0x100000
 size_t heap_size = MEMO_SIZE, next_heap_size = (MEMO_SIZE * 3) / 2, heap_used = 0;
 
 cell_t *alloc_heap(size_t const size) {
@@ -429,7 +429,11 @@ cell_p make_ski_ast(cell_p root, char const **str, char const closing_char[4]) {
 }
 
 cell_p *simplify_ast(cell_p *root) {
-	if (!car(*root)) return NULL;
+	if (is_nil(car(*root))) return NULL;
+	/*if (is_nil(cdr(*root))) {
+		*root = car(*root);
+		return root;
+	}*/
 	cell_p top = *root;
 	if (!is_nil(car(top)) && is_pair(car(top))) {
 		for (top = car(top); cdr(top); top = cdr(top));
@@ -438,7 +442,11 @@ cell_p *simplify_ast(cell_p *root) {
 	} else {
 		for (; cdr(top); top = cdr(top)) {
 			if (is_pair(car(cdr(top)))) {
+				if (!cdr(car(cdr(top)))) {
+				car(cdr(top)) = car(car(cdr(top)));
+				} else {
 				simplify_ast(&car(cdr(top)));
+				}
 			}
 		}
 		return root;
@@ -541,9 +549,22 @@ cell_p *reduce_ast(cell_p *root) {
 
 		default :
 		//printf("atom = %s\n", atom);
-		return cdr(*root) && is_pair(car(cdr(*root)))?reduce_ast(&car(cdr(*root))):NULL;
+		;cell_p *ret = NULL;
+		for(cell_p r = cdr(*root); r; r = cdr(r)) {
+			if (is_pair(car(r))) {
+				ret = reduce_ast(&car(r));
+				//break;
+			}
+		}
+		return ret;
+		
+		//return cdr(*root) && is_pair(car(cdr(*root)))?reduce_ast(&car(cdr(*root))):NULL;
 	}
 	return NULL;
+}
+
+int put_church(cell_p root, int n) {
+	return is_pair(car(cdr(root))) && car(root)==car(car(cdr(root)))?put_church(car(cdr(root)), n + 1):putchar(n + 1);
 }
 
 int main (void) {
@@ -559,12 +580,13 @@ int main (void) {
 	//alloc_cell(0);
 	//return 0;
 	for (; reduce_ast(&ast_root); ) {
-		show_ast(ast_root, 0);
-		puts("");
+		//show_ast(ast_root, 0);puts("");
 		simplify_ast(&ast_root);
-		show_ast(ast_root, 0);
-		puts("");
+		//show_ast(ast_root, 0);puts("");
 	}
+	reduce_ast(&ast_root);
+	show_ast(ast_root, 0);puts("");
+	//put_church(ast_root, 0);
 	alloc_cell(0);
 	return 0;
 }
