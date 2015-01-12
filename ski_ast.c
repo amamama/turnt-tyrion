@@ -549,18 +549,17 @@ cell_p *reduce_ast(cell_p *root) {
 
 		default :
 		//printf("atom = %s\n", atom);
-		;cell_p *ret = NULL;
-		for(cell_p r = cdr(*root); r; r = cdr(r)) {
-			if (is_pair(car(r))) {
-				ret = reduce_ast(&car(r));
-				//break;
-			}
-		}
-		return ret;
-		
 		//return cdr(*root) && is_pair(car(cdr(*root)))?reduce_ast(&car(cdr(*root))):NULL;
+		break;
 	}
-	return NULL;
+	cell_p *ret = NULL;
+	for(cell_p r = cdr(*root); r; r = cdr(r)) {
+		if (is_pair(car(r))) {
+			ret = reduce_ast(&car(r));
+			//break;
+		}
+	}
+	return ret;
 }
 
 int put_church(cell_p root, int n) {
