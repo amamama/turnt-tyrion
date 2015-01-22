@@ -429,7 +429,7 @@ cell_p make_ski_ast(cell_p root, char const **str, char const closing_char[4]) {
 }
 
 cell_p *simplify_ast(cell_p *root) {
-	if (is_nil(car(*root))) return NULL;
+	if (!car(*root) || is_nil(car(*root))) return NULL;
 	/*if (is_nil(cdr(*root))) {
 		*root = car(*root);
 		return root;
